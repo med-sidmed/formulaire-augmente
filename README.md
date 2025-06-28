@@ -1,5 +1,4 @@
-Voici la **version corrigée et améliorée** de ton fichier `README.md` en anglais, avec une meilleure syntaxe Markdown, des corrections sur les commentaires, et une structure plus propre :
-
+ 
 ---
 
 ````markdown
