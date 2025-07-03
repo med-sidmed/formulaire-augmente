@@ -82,7 +82,7 @@ club-site/
 1. Clone the project:
 
 ```bash
-git clone https://github.com/your-username/club-site.git
+git clone https://github.com/med-sidmed/club-site.git
 cd club-site
 ```
 
