@@ -68,21 +68,46 @@ export const submitToNexusSecure = async (
   data: NexusFormData
 ): Promise<{ success: boolean; message: string; submissionId?: string; timestamp?: string }> => {
   try {
+    // Defensive: ensure numeric fields are numeric (avoid Zod number vs string issues)
+    const payloadData: any = { ...data } as any;
+    if (mission === MissionType.DONATION && payloadData.amount !== undefined) {
+      // Convert string amounts to number if necessary
+      if (typeof payloadData.amount === "string") {
+        const parsed = parseFloat(payloadData.amount.replace(/[^0-9.,-]/g, "").replace(",", "."));
+        payloadData.amount = Number.isFinite(parsed) ? parsed : payloadData.amount;
+      }
+    }
+
     const response = await fetch(`${SERVER_URL}/api/submit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ mission, data }),
+      body: JSON.stringify({ mission, data: payloadData }),
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Erreur lors de la transmission");
+      // Handle non-JSON responses (rate-limit returns plain text)
+      const contentType = response.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        const errorData = await response.json();
+        const details = errorData.details ? ` Details: ${JSON.stringify(errorData.details)}` : "";
+        throw new Error(errorData.error + details || "Erreur lors de la transmission");
+      } else {
+        const text = await response.text();
+        throw new Error(text || "Erreur serveur non JSON");
+      }
     }
 
-    const result = await response.json();
+    // Expect JSON on success
+    let result: any;
+    try {
+      result = await response.json();
+    } catch (parseError) {
+      throw new Error("Réponse inattendue du serveur (format invalide)");
+    }
+
     return {
       success: result.success,
       message: result.message,

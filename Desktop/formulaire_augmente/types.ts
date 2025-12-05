@@ -2,7 +2,8 @@ export enum MissionType {
   CONTACT = 'CONTACT',
   DONATION = 'DONATION',
   VOLUNTEER = 'VOLUNTEER',
-  INFO = 'INFO'
+  INFO = 'INFO',
+  NUIT_INFO = 'NUIT_INFO',
 }
 
 export interface BaseFormData {

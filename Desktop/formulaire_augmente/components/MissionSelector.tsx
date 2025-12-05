@@ -7,6 +7,7 @@ import {
   Shield,
   HelpCircle,
   LucideIcon,
+  Sparkles,
 } from "lucide-react";
 
 interface MissionCardProps {
@@ -127,6 +128,15 @@ export const MissionSelector: React.FC<MissionSelectorProps> = ({
         color="#8b5cf6" // Purple
         onClick={onSelect}
         isSelected={selectedMission === MissionType.INFO}
+      />
+      <MissionCard
+        type={MissionType.NUIT_INFO}
+        icon={Sparkles}
+        title="Le village Numérique Résistant"
+        description="Rejoignez la communauté NIRD et obtenez votre manifeste personnalisé."
+        color="#eab308"
+        onClick={onSelect}
+        isSelected={selectedMission === MissionType.NUIT_INFO}
       />
     </div>
   );
